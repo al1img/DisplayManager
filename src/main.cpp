@@ -26,7 +26,7 @@
 #include <getopt.h>
 #include <unistd.h>
 
-#include <xen/be/Log.hpp>
+#include "Log.hpp"
 
 #include "DisplayManager.hpp"
 
@@ -34,8 +34,6 @@ using std::cout;
 using std::endl;
 using std::ofstream;
 using std::string;
-
-using XenBackend::Log;
 
 string gCfgFileName;
 string gLogFileName;
@@ -60,7 +58,9 @@ void segmentationHandler(int sig)
 
 void registerSignals()
 {
-	struct sigaction act {};
+	struct sigaction act
+	{
+	};
 
 	act.sa_handler = segmentationHandler;
 	act.sa_flags = SA_RESETHAND;
@@ -78,7 +78,7 @@ void waitSignals()
 	sigaddset(&set, SIGTERM);
 	sigprocmask(SIG_BLOCK, &set, nullptr);
 
-	sigwait(&set,&signal);
+	sigwait(&set, &signal);
 }
 
 bool commandLineOptions(int argc, char *argv[])
@@ -86,9 +86,9 @@ bool commandLineOptions(int argc, char *argv[])
 
 	int opt = -1;
 
-	while((opt = getopt(argc, argv, "c:v:l:fh?")) != -1)
+	while ((opt = getopt(argc, argv, "c:v:l:fh?")) != -1)
 	{
-		switch(opt)
+		switch (opt)
 		{
 		case 'v':
 
@@ -164,7 +164,7 @@ int main(int argc, char *argv[])
 			return EXIT_FAILURE;
 		}
 	}
-	catch(const std::exception& e)
+	catch (const std::exception &e)
 	{
 		Log::setStreamBuffer(cout.rdbuf());
 

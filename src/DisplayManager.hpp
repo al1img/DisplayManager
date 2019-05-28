@@ -27,7 +27,7 @@ private:
 	DBusServer mServer;
 	std::unique_ptr<EventHandler> mEvents;
 
-	XenBackend::Log mLog;
+	Log mLog;
 
 	void showDisplaysInfo();
 	void createDisplays();

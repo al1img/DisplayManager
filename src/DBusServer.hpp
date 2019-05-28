@@ -13,26 +13,26 @@
 #include <core/dbus/dbus.h>
 #include <core/dbus/message.h>
 
-#include <xen/be/Log.hpp>
+#include "Log.hpp"
 
 #include "ActionManager.hpp"
 
 class DBusServer
 {
 public:
-	DBusServer(ActionManager& actions);
+	DBusServer(ActionManager &actions);
 	~DBusServer();
 
 private:
 	core::dbus::Bus::Ptr mBus;
 	core::dbus::Object::Ptr mObject;
 	std::thread mThread;
-	ActionManager& mActions;
+	ActionManager &mActions;
 
-	XenBackend::Log mLog;
+	Log mLog;
 
-	void introspectHandler(const core::dbus::Message::Ptr& msg);
-	void userEventHandler(const core::dbus::Message::Ptr& msg);
+	void introspectHandler(const core::dbus::Message::Ptr &msg);
+	void userEventHandler(const core::dbus::Message::Ptr &msg);
 };
 
 #endif /* SRC_DBUSSERVER_HPP_ */

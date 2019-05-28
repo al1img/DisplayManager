@@ -16,10 +16,9 @@
 #include <thread>
 #include <vector>
 
-#include <xen/be/Log.hpp>
-
 #include "Config.hpp"
 #include "Exception.hpp"
+#include "Log.hpp"
 #include "ObjectManager.hpp"
 
 /*******************************************************************************
@@ -56,7 +55,7 @@ enum class ActionType
 class Action
 {
 public:
-	Action(const std::string& name) : mName(name) {}
+	Action(const std::string &name) : mName(name) {}
 	virtual ~Action() {}
 
 	std::string getName() const { return mName; }
@@ -69,12 +68,11 @@ private:
 class ActionObject : public Action
 {
 public:
-	ActionObject(const std::string& actionName, ObjectManager& objects,
-				 ObjectType type, const std::string& objectName) :
-		Action(actionName),
-		mObjects(objects),
-		mType(type),
-		mObjectName(objectName) {}
+	ActionObject(const std::string &actionName, ObjectManager &objects,
+				 ObjectType type, const std::string &objectName) : Action(actionName),
+																   mObjects(objects),
+																   mType(type),
+																   mObjectName(objectName) {}
 
 protected:
 	IlmObjectPtr getObject()
@@ -99,7 +97,7 @@ protected:
 	}
 
 protected:
-	ObjectManager& mObjects;
+	ObjectManager &mObjects;
 	ObjectType mType;
 	std::string mObjectName;
 };
@@ -107,10 +105,9 @@ protected:
 class ActionSource : public ActionObject
 {
 public:
-	ActionSource(ObjectManager& objects, ObjectType type,
-				 const std::string& name, const IlmRectangle& source) :
-		ActionObject("SOURCE", objects, type, name),
-		mSource(source) {}
+	ActionSource(ObjectManager &objects, ObjectType type,
+				 const std::string &name, const IlmRectangle &source) : ActionObject("SOURCE", objects, type, name),
+																		mSource(source) {}
 
 	void perform() override
 	{
@@ -124,11 +121,10 @@ private:
 class ActionDestination : public ActionObject
 {
 public:
-	ActionDestination(ObjectManager& objects, ObjectType type,
-					  const std::string& name,
-					  const IlmRectangle& destination) :
-		ActionObject("DESTINATION", objects, type, name),
-		mDestination(destination) {}
+	ActionDestination(ObjectManager &objects, ObjectType type,
+					  const std::string &name,
+					  const IlmRectangle &destination) : ActionObject("DESTINATION", objects, type, name),
+														 mDestination(destination) {}
 
 	void perform() override
 	{
@@ -142,10 +138,9 @@ private:
 class ActionParent : public ActionObject
 {
 public:
-	ActionParent(ObjectManager& objects, ObjectType type,
-				 const std::string& name, const std::string& parent) :
-		ActionObject("PARENT", objects, type, name),
-		mParentName(parent) {}
+	ActionParent(ObjectManager &objects, ObjectType type,
+				 const std::string &name, const std::string &parent) : ActionObject("PARENT", objects, type, name),
+																	   mParentName(parent) {}
 
 	void perform() override
 	{
@@ -172,13 +167,12 @@ private:
 	std::string mParentName;
 };
 
-class ActionOrder: public ActionObject
+class ActionOrder : public ActionObject
 {
 public:
-	ActionOrder(ObjectManager& objects, ObjectType type,
-				const std::string& name, int order) :
-		ActionObject("ORDER", objects, type, name),
-		mOrder(order) {}
+	ActionOrder(ObjectManager &objects, ObjectType type,
+				const std::string &name, int order) : ActionObject("ORDER", objects, type, name),
+													  mOrder(order) {}
 
 	void perform() override
 	{
@@ -189,13 +183,12 @@ private:
 	int mOrder;
 };
 
-class ActionVisibility: public ActionObject
+class ActionVisibility : public ActionObject
 {
 public:
-	ActionVisibility(ObjectManager& objects, ObjectType type,
-					 const std::string& name, t_ilm_bool value) :
-		ActionObject("VISIBILITY", objects, type, name),
-		mValue(value) {}
+	ActionVisibility(ObjectManager &objects, ObjectType type,
+					 const std::string &name, t_ilm_bool value) : ActionObject("VISIBILITY", objects, type, name),
+																  mValue(value) {}
 
 	void perform() override
 	{
@@ -206,13 +199,12 @@ private:
 	t_ilm_bool mValue;
 };
 
-class ActionOpacity: public ActionObject
+class ActionOpacity : public ActionObject
 {
 public:
-	ActionOpacity(ObjectManager& objects, ObjectType type,
-				  const std::string& name, t_ilm_float value) :
-		ActionObject("OPACITY", objects, type, name),
-		mValue(value) {}
+	ActionOpacity(ObjectManager &objects, ObjectType type,
+				  const std::string &name, t_ilm_float value) : ActionObject("OPACITY", objects, type, name),
+																mValue(value) {}
 
 	void perform() override
 	{
@@ -232,9 +224,8 @@ typedef std::shared_ptr<Action> ActionPtr;
 class Event
 {
 public:
-	Event(EventType event) :
-		mEvent(event),
-		mLog("Event") {}
+	Event(EventType event) : mEvent(event),
+							 mLog("Event") {}
 
 	virtual ~Event() {}
 
@@ -242,7 +233,7 @@ public:
 	EventType getEventType() const { return mEvent; }
 	void doActions()
 	{
-		for(auto action : mActions)
+		for (auto action : mActions)
 		{
 			LOG(mLog, DEBUG) << "Do action: " << action->getName();
 
@@ -253,17 +244,15 @@ public:
 private:
 	EventType mEvent;
 	std::vector<ActionPtr> mActions;
-	XenBackend::Log mLog;
+	Log mLog;
 };
-
 
 class EventObject : public Event
 {
 public:
-	EventObject(EventType event, ObjectType object, const std::string& name) :
-		Event(event),
-		mObject(object),
-		mName(name) {}
+	EventObject(EventType event, ObjectType object, const std::string &name) : Event(event),
+																			   mObject(object),
+																			   mName(name) {}
 	ObjectType getObjectType() const { return mObject; }
 	std::string getName() const { return mName; }
 
@@ -275,15 +264,13 @@ private:
 class EventUser : public Event
 {
 public:
-	EventUser(uint32_t id) :
-		Event(EventType::USER),
-		mID(id) {}
+	EventUser(uint32_t id) : Event(EventType::USER),
+							 mID(id) {}
 	uint32_t getID() const { return mID; }
 
 private:
 	uint32_t mID;
 };
-
 
 typedef std::shared_ptr<Event> EventPtr;
 
@@ -294,7 +281,7 @@ typedef std::shared_ptr<Event> EventPtr;
 class ActionManager
 {
 public:
-	ActionManager(ObjectManager& objects, ConfigPtr config);
+	ActionManager(ObjectManager &objects, ConfigPtr config);
 	~ActionManager();
 
 	void createLayer(t_ilm_layer id);
@@ -306,11 +293,10 @@ public:
 	void userEvent(uint32_t id);
 
 private:
-
 	struct EventsTable
 	{
 		EventType type;
-		const char* name;
+		const char *name;
 	};
 
 	static const std::vector<EventsTable> sEventsTable;
@@ -318,7 +304,7 @@ private:
 	struct ObjectsTable
 	{
 		ObjectType type;
-		const char* name;
+		const char *name;
 	};
 
 	static const std::vector<ObjectsTable> sObjectsTable;
@@ -326,17 +312,17 @@ private:
 	struct ActionsTable
 	{
 		ActionType type;
-		const char* name;
+		const char *name;
 	};
 
 	static const std::vector<ActionsTable> sActionsTable;
 
 	typedef std::function<void()> AsyncCall;
 
-	ObjectManager& mObjects;
+	ObjectManager &mObjects;
 	ConfigPtr mConfig;
 	bool mTerminate;
-	XenBackend::Log mLog;
+	Log mLog;
 
 	std::vector<EventPtr> mEvents;
 
@@ -368,14 +354,14 @@ private:
 	ActionPtr createActionVisibility(int eventIndex, int actionIndex);
 	ActionPtr createActionOpacity(int eventIndex, int actionIndex);
 	template <typename T, typename S>
-	T getType(const std::vector<S>& table, const std::string& name);
+	T getType(const std::vector<S> &table, const std::string &name);
 
 	EventPtr getObjectEvent(EventType eventType, ObjectType objectType,
-							const std::string& name);
+							const std::string &name);
 	EventPtr getUserEvent(uint32_t id);
 
-	void onCreateSurface(const std::string& name);
-	void onDeleteSurface(const std::string& name);
+	void onCreateSurface(const std::string &name);
+	void onDeleteSurface(const std::string &name);
 	void onUserEvent(uint32_t id);
 };
 

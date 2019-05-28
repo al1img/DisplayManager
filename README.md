@@ -2,7 +2,6 @@
 
 ## Dependencies:
 ### Required:
-* libxenbe log
 * libconfigc++
 * wayland-ivi-extension
 
@@ -16,17 +15,16 @@ There are variables and options. Options can be set to ON and OFF.
 
 Supported options:
 
-| Option | Description |
-| --- | --- |
+| Option     | Description                                                                                                                            |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------------------- |
 | `WITH_DOC` | Creates target to build documentation. It required Doxygen to be installed. If configured, documentation can be create with `make doc` |
 
 Supported variables:
 
-| Variable | Description |
-| --- | --- |
-| `CMAKE_BUILD_TYPE` | `Release`, `Debug`, `RelWithDebInfo`, `MinSizeRel`|
-| `CMAKE_INSTALL_PREFIX` | Default install path |
-| `XENBE_LOG_INCLUDE_PATH` | Path to libxenbe includes if they are located in non standard place |
+| Variable               | Description                                        |
+| ---------------------- | -------------------------------------------------- |
+| `CMAKE_BUILD_TYPE`     | `Release`, `Debug`, `RelWithDebInfo`, `MinSizeRel` |
+| `CMAKE_INSTALL_PREFIX` | Default install path                               |
 
 Example:
 ```
