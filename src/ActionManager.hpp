@@ -360,6 +360,8 @@ private:
 							const std::string &name);
 	EventPtr getUserEvent(uint32_t id);
 
+	void onCreateLayer(const std::string &name);
+	void onDeleteLayer(const std::string &name);
 	void onCreateSurface(const std::string &name);
 	void onDeleteSurface(const std::string &name);
 	void onUserEvent(uint32_t id);
