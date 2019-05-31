@@ -11,6 +11,7 @@
 
 
 using DBus::BUS_SESSION;
+using DBus::Error;
 using DBus::init;
 using DBus::Dispatcher;
 
@@ -23,22 +24,28 @@ DBusServer::DBusServer(ActionManager& actions) :
 {
 	LOG(mLog, DEBUG) << "Create";
 
-	init();
-	
-	mDispatcher = Dispatcher::create();
-	mConnection = mDispatcher->create_connection(BUS_SESSION);
-
-	if (mConnection->request_name("com.epam.DisplayManager",
-								  DBUS_NAME_FLAG_REPLACE_EXISTING)
-		!= DBUS_REQUEST_NAME_REPLY_PRIMARY_OWNER) 
+	try
 	{
-		throw(runtime_error("Can't request DBus name"));
+		init();
+
+		mDispatcher = Dispatcher::create();
+		mConnection = mDispatcher->create_connection(BUS_SESSION);
+
+		if (mConnection->request_name("com.epam.DisplayManager",
+									DBUS_NAME_FLAG_REPLACE_EXISTING)
+			!= DBUS_REQUEST_NAME_REPLY_PRIMARY_OWNER) 
+		{
+			throw(runtime_error("Can't request DBus name"));
+		}
+
+		mAdapter = DBusControlAdapter::create(this);
+
+		mConnection->register_object(mAdapter);
 	}
-
-	DBusControlAdapter::create(this);
-
-	mAdapter = DBusControlAdapter::create(this);
-	mConnection->register_object(mAdapter);
+	catch(DBusCxxPointer<Error> e)
+	{
+		throw *e;
+	}
 }
 
 DBusServer::~DBusServer()

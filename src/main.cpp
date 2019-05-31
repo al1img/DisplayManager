@@ -32,7 +32,9 @@
 
 using std::cout;
 using std::endl;
+using std::exception;
 using std::ofstream;
+using std::shared_ptr;
 using std::string;
 
 using xt::Log;
@@ -164,7 +166,7 @@ int main(int argc, char *argv[])
 			return EXIT_FAILURE;
 		}
 	}
-	catch(const std::exception& e)
+	catch(const exception& e)
 	{
 		Log::setStreamBuffer(cout.rdbuf());
 
